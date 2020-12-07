@@ -1,5 +1,6 @@
 import {Subject} from 'rxjs'
 import {scan, startWith, shareReplay} from 'rxjs/operators'
+import Table from './static_table.png'
 
 const initialState = {
   counter: 0

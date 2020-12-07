@@ -14,5 +14,13 @@ module.exports = {
     new HTMLPlugin({
       template: "./src/index.html"
     })
-  ]
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.(eot|ttf|woff|woff2|svg|png)$/i,
+        use: 'file-loader'
+      }
+    ]
+  }
 }
