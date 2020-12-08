@@ -15,7 +15,13 @@ const initialState = {
   card_7: decksInitial * 4,
   card_8: decksInitial * 4,
   card_9: decksInitial * 4,
-  card_10: decksInitial * 4 * 5,
+  card_10: decksInitial * 4 * 5
+}
+
+const addInitialState = {
+  win: 0,
+  loose: 0,
+  games: 0
 }
 
 const getDecksPlayed = (state) => {
@@ -45,6 +51,7 @@ const getDecksPlayed = (state) => {
 
 const pre = document.querySelector('pre')
 const lastCard = document.getElementById('lastCard')
+const statistic = document.getElementById('statistic')
 const card_2_remains = document.getElementById('card_2_remains')
 const card_3_remains = document.getElementById('card_3_remains')
 const card_4_remains = document.getElementById('card_4_remains')
@@ -92,11 +99,13 @@ const handlers = {
     const newState = {...state, counter: state.counter - 2, lastCard: '10/A', card_10: state.card_10 - 1}
     return {...newState, decksPlayed: getDecksPlayed(newState) }
   },
-  SHUFFLE: state => ({...initialState}),
+  WIN: state => ({...state, win: state.win + 1, games: state.games + 1}),
+  LOOSE: state => ({...state, loose: state.loose + 1, games: state.games + 1}),
+  SHUFFLE: state => ({...state, ...initialState}),
   DEFAULT: state => state
 }
 
-function reducer(state = initialState, action) {
+function reducer(state = {...initialState, ...addInitialState}, action) {
   const handler = handlers[action.type] || handlers.DEFAULT
   return handler(state, action)
 }
@@ -119,6 +128,7 @@ const store$ = createStore(reducer)
 
 store$.subscribe(state => {
   pre.innerHTML = 'Count: ' + state.counter / 2 + ' | True count: ' + (state.counter / (state.decks-state.decksPlayed)).toFixed(2) + ' | Last card: ' + state.lastCard;
+  statistic.innerHTML = 'Games: ' + state.games + ' | Win: ' + (Math.round((state.win / state.games)*100) || 0) + '% | Loose: ' + (Math.round((state.loose / state.games)*100) || 0) + '%'
   card_2_remains.innerHTML = state.card_2;
   card_3_remains.innerHTML = state.card_3;
   card_4_remains.innerHTML = state.card_4;
@@ -202,6 +212,12 @@ keydown$.subscribe(($event) => {
             break;
           case 'KeyR':
             store$.dispatch({type: 'SHUFFLE'})
+            break;
+          case 'KeyW':
+            store$.dispatch({type: 'WIN'})
+            break;
+          case 'KeyL':
+            store$.dispatch({type: 'LOOSE'})
             break;
           default:
             console.log($event);
