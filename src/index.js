@@ -101,6 +101,7 @@ const handlers = {
   },
   WIN: state => ({...state, win: state.win + 1, games: state.games + 1}),
   LOOSE: state => ({...state, loose: state.loose + 1, games: state.games + 1}),
+  PUSH: state => ({...state, games: state.games + 1}),
   SHUFFLE: state => ({...state, ...initialState}),
   DEFAULT: state => state
 }
@@ -218,6 +219,9 @@ keydown$.subscribe(($event) => {
             break;
           case 'KeyL':
             store$.dispatch({type: 'LOOSE'})
+            break;
+          case 'KeyP':
+            store$.dispatch({type: 'PUSH'})
             break;
           default:
             console.log($event);
